@@ -22,8 +22,10 @@ jobs:
         run: |
           if git ls-files '*.csproj' '*.sln' | grep -q '.'; then
             echo "has_dotnet_files=true" >> $GITHUB_ENV
+            echo "true" > has_dotnet_files.txt
           else
             echo "has_dotnet_files=false" >> $GITHUB_ENV
+            echo "false" > has_dotnet_files.txt
           fi
 
       - name: Setup .NET Core
@@ -88,6 +90,7 @@ jobs:
       steps:
       - uses: actions/checkout@v3
       - name: Download artifact from previous job
+        if: ${{ needs.check-files.outputs.has_dotnet_files == 'true' }}
         uses: actions/download-artifact@v3
         with:
           name: lockfile 
