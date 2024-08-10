@@ -27,6 +27,8 @@ jobs:
             echo "has_dotnet_files=false" >> $GITHUB_ENV
             echo "false" > has_dotnet_files.txt
           fi
+        outputs:
+          has_dotnet_files: ${{ steps.check.outputs.has_dotnet_files }}
 
       - name: Setup .NET Core
         if: env.has_dotnet_files == 'true'
@@ -90,7 +92,7 @@ jobs:
       steps:
       - uses: actions/checkout@v3
       - name: Download artifact from previous job
-        if: ${{ needs.check-files.outputs.has_dotnet_files == 'true' }}
+        if: ${{ needs.restore.outputs.has_dotnet_files == 'true' }}
         uses: actions/download-artifact@v3
         with:
           name: lockfile 
